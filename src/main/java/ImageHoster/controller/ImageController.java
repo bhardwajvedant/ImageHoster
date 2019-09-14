@@ -94,9 +94,9 @@ public class ImageController {
     @RequestMapping(value = "/editImage")
     public String editImage(@RequestParam("imageId") Integer imageId, Model model, HttpSession session) {
         Image image = imageService.getImage(imageId);
-
         User loggedInUser = (User) session.getAttribute("loggeduser");
         User imageOwner = image.getUser();
+        List<Tag> tags = image.getId();
 
         model.addAttribute("tags", image.getTags());
 
@@ -105,9 +105,9 @@ public class ImageController {
             return "images/edit";
         }
         else{
-            image.setImageAccessDeniedError("Only the Owner of the Image can edit the Image");
-
+            model.addAttribute("editError",true);
             model.addAttribute("image", image);
+            model.addAttribute("tags",tags);
             return "images/image";
         }
     }
@@ -163,10 +163,9 @@ public class ImageController {
         }
         else{
 
-            String tags = convertTagsToString(currentImage.getTags());
             model.addAttribute("tags", currentImage.getTags());
-            currentImage.setImageAccessDeniedError("Only the Owner of the Image can delete the Image");
             model.addAttribute("image", currentImage);
+            model.addAttribute("deleteError",true);
             return "images/image";
         }
 
