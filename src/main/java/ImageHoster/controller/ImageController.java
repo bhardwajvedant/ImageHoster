@@ -92,13 +92,24 @@ public class ImageController {
     //The method first needs to convert the list of all the tags to a string containing all the tags separated by a comma and then add this string in a Model type object
     //This string is then displayed by 'edit.html' file as previous tags of an image
     @RequestMapping(value = "/editImage")
-    public String editImage(@RequestParam("imageId") Integer imageId, Model model) {
+    public String editImage(@RequestParam("imageId") Integer imageId, Model model, HttpSession session) {
         Image image = imageService.getImage(imageId);
 
-        String tags = convertTagsToString(image.getTags());
-        model.addAttribute("image", image);
-        model.addAttribute("tags", tags);
-        return "images/edit";
+        User loggedInUser = (User) session.getAttribute("loggeduser");
+        User imageOwner = image.getUser();
+
+        model.addAttribute("tags", image.getTags());
+
+        if(loggedInUser.getId() == image.getId()){
+            model.addAttribute("image", image);
+            return "images/edit";
+        }
+        else{
+            image.setImageAccessDeniedError("Only the Owner of the Image can edit the Image");
+
+            model.addAttribute("image", image);
+            return "images/image";
+        }
     }
 
     //This controller method is called when the request pattern is of type 'images/edit' and also the incoming request is of PUT type
@@ -140,9 +151,25 @@ public class ImageController {
     //The method calls the deleteImage() method in the business logic passing the id of the image to be deleted
     //Looks for a controller method with request mapping of type '/images'
     @RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
-    public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId) {
-        imageService.deleteImage(imageId);
-        return "redirect:/images";
+    public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId, HttpSession session, Model model) {
+
+        User loggedInUser =(User) session.getAttribute("loggeduser");
+        Image currentImage = imageService.getImage(imageId);
+        User imageOwner = currentImage.getUser();
+
+        if(loggedInUser.getId() == imageOwner.getId()){
+            imageService.deleteImage(imageId);
+            return "redirect:/images";
+        }
+        else{
+
+            String tags = convertTagsToString(currentImage.getTags());
+            model.addAttribute("tags", currentImage.getTags());
+            currentImage.setImageAccessDeniedError("Only the Owner of the Image can delete the Image");
+            model.addAttribute("image", currentImage);
+            return "images/image";
+        }
+
     }
 
 

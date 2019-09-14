@@ -21,6 +21,9 @@
         <form th:action="@{/deleteImage(imageId=${image.id})}" th:method="delete">
             <input type="submit" value="Delete"/>
         </form>
+        <div th:if="${image.imagesAccessDeniedError!=null}">
+            <label style="border: 1px solid darkred" th:text="$(image.imageAccessDeniedError)"></label>
+        </div>
         <!-- Show the delete error if the non owner of the image is trying to delete the image-->
         <!--Uncomment the below code to show the error if the non owner of the image is trying to delete the image-->
         <!--<div th:if="${deleteError}">Only the owner of the image can delete the image</div>-->

@@ -37,6 +37,9 @@ public class Image {
     @Column(name = "date")
     private Date date;
 
+    @Transient
+    private String imageAccessDeniedError;
+
     //The 'images' table is mapped to 'users' table with Many:One mapping
     //One image can have only one user (owner) but one user can have multiple images
     //FetchType is EAGER
@@ -126,4 +129,8 @@ public class Image {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
+
+    public String getImageAccessDeniedError() {return imageAccessDeniedError;}
+
+    public void setImageAccessDeniedError(String imageAccessDeniedError) {this.imageAccessDeniedError = imageAccessDeniedError;}
 }
