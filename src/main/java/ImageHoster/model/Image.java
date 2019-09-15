@@ -37,7 +37,6 @@ public class Image {
     @Column(name = "date")
     private Date date;
 
-
     //The 'images' table is mapped to 'users' table with Many:One mapping
     //One image can have only one user (owner) but one user can have multiple images
     //FetchType is EAGER
@@ -45,6 +44,9 @@ public class Image {
     //Below annotation indicates that the name of the column in 'images' table referring the primary key in 'users' table will be 'user_id'
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "image", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Comment> comments;
 
     //The attribute contains a list of all the tags of an image
     //Note that no column will be generated for this attribute in the database instead a new table will be created
@@ -69,7 +71,6 @@ public class Image {
         this.description = description;
         this.date = date;
     }
-
 
 
     public Integer getId() {
@@ -128,4 +129,11 @@ public class Image {
         this.tags = tags;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }
