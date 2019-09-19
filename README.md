@@ -16,6 +16,7 @@ GIT
 Installation:
 
 To able to run the project, please download the PostgreSQL (pgAdmin) and do the following changes:
+  
   1.You must manually create a database named ‘imageHoster’ in PostgreSQL with the user as ‘postgres’ using pgAdmin as the UI.
 
   2.Change the username and password in the stub file in the ‘src/main/java/imageHoster/config/JpaConfig.java’ file and ‘src/main/resources/META-INF/ persistence.xml’ file according to your PostgreSQL username and password.
